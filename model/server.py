@@ -58,7 +58,7 @@ class server(object):
                 output = self.model(data)
                 pred = output.argmax(dim=1, keepdim=True)
                 test_correct += pred.eq(target.view_as(pred)).sum().item()
-        return 100. * test_correct / len(self.test_loader.dataset)
+        return test_correct / len(self.test_loader.dataset)
 
     def aggregate(self):
         grads_info = self.__load_grads()
@@ -70,4 +70,4 @@ class server(object):
         test_accuracy = self.__test()
         self.accuracy.append(test_accuracy)
         torch.save(self.accuracy, './cache/accuracy.pkl')
-        print('\n[Global Model]  Test Accuracy: {:.2f}%\n'.format(test_accuracy))
+        print('\n[Global Model]  Test Accuracy: {:.2f}%\n'.format(test_accuracy * 100.))
